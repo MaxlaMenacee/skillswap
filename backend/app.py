@@ -736,6 +736,16 @@ def internal_error(e):
 #  Lancement
 # =============================================
 
+# Initialisation auto de la BDD à la première requête
+_db_initialized = False
+
+@app.before_request
+def ensure_db():
+    global _db_initialized
+    if not _db_initialized:
+        init_db()
+        _db_initialized = True
+
 if __name__ == '__main__':
     with app.app_context():
         init_db()
