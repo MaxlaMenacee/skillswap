@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Créer un compte — SkillSwap{% endblock %}
+
+{% block content %}
+<h1>Créer un compte</h1>
+<form method="POST" action="{{ url_for('inscription') }}" style="max-width:480px;">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" name="prenom" value="{{ prenom|default('') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" value="{{ nom|default('') }}" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ email|default('') }}" required autocomplete="email">
+    </div>
+    <div class="form-group">
+        <label for="mot_de_passe">Mot de passe</label>
+        <input type="password" id="mot_de_passe" name="mot_de_passe" required minlength="8" autocomplete="new-password">
+        <small class="text-muted">Min. 8 caractères, 1 majuscule, 1 chiffre.</small>
+    </div>
+    <div class="form-group">
+        <label for="confirm_mot_de_passe">Confirmer le mot de passe</label>
+        <input type="password" id="confirm_mot_de_passe" name="confirm_mot_de_passe" required autocomplete="new-password">
+    </div>
+    <button type="submit" class="btn btn-primary">Créer mon compte</button>
+    <p class="mt-1 text-muted" style="font-size:.9rem;">Déjà un compte ? <a href="{{ url_for('login') }}">Se connecter</a></p>
+</form>
+{% endblock %}

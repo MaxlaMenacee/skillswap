@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Admin — Modifier utilisateur — SkillSwap{% endblock %}
+
+{% block content %}
+<h1>Modifier l'utilisateur #{{ user.id }}</h1>
+<form method="POST" style="max-width:480px;">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" name="prenom" value="{{ user.prenom }}" required>
+        </div>
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" value="{{ user.nom }}" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ user.email }}" required>
+    </div>
+    <div class="form-group">
+        <label for="role">Rôle</label>
+        <select id="role" name="role">
+            <option value="utilisateur" {% if user.role == 'utilisateur' %}selected{% endif %}>Utilisateur</option>
+            <option value="administrateur" {% if user.role == 'administrateur' %}selected{% endif %}>Administrateur</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="{{ url_for('admin_utilisateurs') }}" class="btn btn-secondary">Annuler</a>
+</form>
+
+<p class="section-title mt-1">Supprimer cet utilisateur</p>
+<form method="POST" action="{{ url_for('admin_supprimer_utilisateur', user_id=user.id) }}" style="max-width:400px;">
+    <div class="form-group">
+        <label for="confirmation">Tapez <strong>SUPPRIMER</strong> pour confirmer</label>
+        <input type="text" id="confirmation" name="confirmation" placeholder="SUPPRIMER">
+    </div>
+    <button type="submit" class="btn btn-danger btn-sm">Supprimer l'utilisateur</button>
+</form>
+{% endblock %}

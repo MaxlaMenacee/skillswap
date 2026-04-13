@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}SkillSwap — Échangez vos compétences{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Échangez vos compétences. Gratuitement. Entre étudiants.</h1>
+    <p>Propose ce que tu sais faire. Apprends ce que tu veux. Sans argent, sans intermédiaire.</p>
+    <div class="hero-actions">
+        {% if current_user %}
+            <a href="{{ url_for('gerer_competences') }}" class="btn btn-primary">Proposer ma compétence</a>
+        {% else %}
+            <a href="{{ url_for('inscription') }}" class="btn btn-primary">Créer un compte</a>
+        {% endif %}
+        <a href="{{ url_for('parcourir') }}" class="btn btn-secondary">Parcourir les compétences</a>
+    </div>
+</section>
+
+<div class="green-block">
+    <h2>Notre engagement Green IT</h2>
+    <p>Page &lt; 200 Ko • Aucun tracker • Zéro publicité • Polices système • Hébergement sobre</p>
+</div>
+
+{% if competences %}
+<p class="section-title">Compétences populaires</p>
+<div>
+    {% for c in competences %}
+        <a href="{{ url_for('parcourir', competence=c.libelle) }}" class="tag tag-green">{{ c.libelle }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if profils %}
+<p class="section-title">Profils récents</p>
+<div class="cards-grid">
+    {% for p in profils %}
+    <article class="card">
+        <h3>{{ p.prenom }} {{ p.nom[0] }}.</h3>
+        {% if p.offertes %}
+            <p><strong>Offre :</strong> {{ p.offertes | join(', ') }}</p>
+        {% endif %}
+        {% if p.cherchees %}
+            <p><strong>Cherche :</strong> {{ p.cherchees | join(', ') }}</p>
+        {% endif %}
+        <a href="{{ url_for('voir_profil', user_id=p.id) }}" class="btn btn-secondary btn-sm mt-1">Voir le profil</a>
+    </article>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

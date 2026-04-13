@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ user.prenom }} {{ user.nom }} — SkillSwap{% endblock %}
+
+{% block content %}
+<h1>{{ user.prenom }} {{ user.nom }}</h1>
+<p class="text-muted">Membre depuis le {{ user.date_inscription[:10] }}</p>
+
+<p class="section-title">Compétences offertes</p>
+{% if offertes %}
+    {% for c in offertes %}<span class="tag tag-green">{{ c.libelle }}</span>{% endfor %}
+{% else %}
+    <p class="text-muted">Aucune compétence renseignée.</p>
+{% endif %}
+
+<p class="section-title">Compétences cherchées</p>
+{% if cherchees %}
+    {% for c in cherchees %}<span class="tag tag-blue">{{ c.libelle }}</span>{% endfor %}
+{% else %}
+    <p class="text-muted">Aucune compétence renseignée.</p>
+{% endif %}
+
+{% if current_user and current_user.id != user.id %}
+<div class="mt-1">
+    <a href="{{ url_for('nouvelle_session', partenaire_id=user.id) }}" class="btn btn-primary">Proposer une session</a>
+</div>
+{% endif %}
+<div class="mt-1">
+    <a href="{{ url_for('parcourir') }}" class="btn btn-secondary btn-sm">← Retour</a>
+</div>
+{% endblock %}

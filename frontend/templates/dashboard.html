@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord — SkillSwap{% endblock %}
+
+{% block content %}
+<div class="flex-between mb-1">
+    <h1>Tableau de bord</h1>
+    <div>
+        <a href="{{ url_for('modifier_profil') }}" class="btn btn-secondary btn-sm">Modifier mon profil</a>
+        <a href="{{ url_for('gerer_competences') }}" class="btn btn-secondary btn-sm">Mes compétences</a>
+    </div>
+</div>
+
+<p>Bienvenue, <strong>{{ user.prenom }} {{ user.nom }}</strong> — inscrit depuis le {{ user.date_inscription[:10] }}</p>
+
+<p class="section-title">Compétences offertes</p>
+{% if offertes %}
+    {% for c in offertes %}<span class="tag tag-green">{{ c.libelle }}</span>{% endfor %}
+{% else %}
+    <p class="text-muted">Aucune compétence offerte. <a href="{{ url_for('gerer_competences') }}">En ajouter</a></p>
+{% endif %}
+
+<p class="section-title">Compétences cherchées</p>
+{% if cherchees %}
+    {% for c in cherchees %}<span class="tag tag-blue">{{ c.libelle }}</span>{% endfor %}
+{% else %}
+    <p class="text-muted">Aucune compétence cherchée. <a href="{{ url_for('gerer_competences') }}">En ajouter</a></p>
+{% endif %}
+
+<div class="flex-between">
+    <p class="section-title">Mes sessions d'échange</p>
+    <a href="{{ url_for('parcourir') }}" class="btn btn-primary btn-sm">+ Nouvelle session</a>
+</div>
+
+{% if sessions %}
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>Partenaire</th>
+                <th>Compétence</th>
+                <th>Date</th>
+                <th>Durée</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in sessions %}
+            <tr>
+                <td><a href="{{ url_for('voir_profil', user_id=s.partenaire_id) }}">{{ s.partenaire }}</a></td>
+                <td>{{ s.competence }}</td>
+                <td>{{ s.date_souhaitee }}</td>
+                <td>{{ s.duree_estimee }} min</td>
+                <td><span class="statut statut-{{ s.statut }}">{{ s.statut }}</span></td>
+                <td><a href="{{ url_for('modifier_session', session_id=s.id) }}" class="btn btn-secondary btn-sm">Modifier</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-muted">Aucune session pour le moment. Parcourez les profils pour en proposer une.</p>
+{% endif %}
+
+<p class="section-title mt-1">Zone de danger</p>
+<form method="POST" action="{{ url_for('supprimer_profil') }}" style="max-width:400px;">
+    <div class="form-group">
+        <label for="confirmation">Tapez <strong>SUPPRIMER</strong> pour supprimer votre compte</label>
+        <input type="text" id="confirmation" name="confirmation" placeholder="SUPPRIMER">
+    </div>
+    <button type="submit" class="btn btn-danger btn-sm">Supprimer mon compte</button>
+</form>
+{% endblock %}

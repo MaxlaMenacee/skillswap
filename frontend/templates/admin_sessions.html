@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Admin — Sessions — SkillSwap{% endblock %}
+
+{% block content %}
+<div class="flex-between mb-1">
+    <h1>Administration — Sessions</h1>
+    <a href="{{ url_for('admin_utilisateurs') }}" class="btn btn-secondary btn-sm">Voir les utilisateurs</a>
+</div>
+
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Proposant</th>
+                <th>Destinataire</th>
+                <th>Compétence</th>
+                <th>Date</th>
+                <th>Durée</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in sessions %}
+            <tr>
+                <td>{{ s.id }}</td>
+                <td>{{ s.proposant }}</td>
+                <td>{{ s.destinataire }}</td>
+                <td>{{ s.competence }}</td>
+                <td>{{ s.date_souhaitee }}</td>
+                <td>{{ s.duree_estimee }} min</td>
+                <td><span class="statut statut-{{ s.statut }}">{{ s.statut }}</span></td>
+                <td><a href="{{ url_for('modifier_session', session_id=s.id) }}" class="btn btn-secondary btn-sm">Modifier</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="{{ url_for('admin_sessions', page=page-1) }}">← Précédent</a>
+    {% endif %}
+    {% for p in range(1, total_pages+1) %}
+        {% if p == page %}
+        <span class="active">{{ p }}</span>
+        {% else %}
+        <a href="{{ url_for('admin_sessions', page=p) }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page < total_pages %}
+    <a href="{{ url_for('admin_sessions', page=page+1) }}">Suivant →</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

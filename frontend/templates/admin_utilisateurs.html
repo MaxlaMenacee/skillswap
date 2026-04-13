@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Admin — Utilisateurs — SkillSwap{% endblock %}
+
+{% block content %}
+<div class="flex-between mb-1">
+    <h1>Administration — Utilisateurs</h1>
+    <a href="{{ url_for('admin_sessions') }}" class="btn btn-secondary btn-sm">Voir les sessions</a>
+</div>
+
+<div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Rôle</th>
+                <th>Inscrit le</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in utilisateurs %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.prenom }} {{ u.nom }}</td>
+                <td>{{ u.email }}</td>
+                <td><span class="tag {% if u.role == 'administrateur' %}tag-green{% endif %}">{{ u.role }}</span></td>
+                <td>{{ u.date_inscription[:10] }}</td>
+                <td>
+                    <a href="{{ url_for('admin_modifier_utilisateur', user_id=u.id) }}" class="btn btn-secondary btn-sm">Modifier</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="{{ url_for('admin_utilisateurs', page=page-1) }}">← Précédent</a>
+    {% endif %}
+    {% for p in range(1, total_pages+1) %}
+        {% if p == page %}
+        <span class="active">{{ p }}</span>
+        {% else %}
+        <a href="{{ url_for('admin_utilisateurs', page=p) }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page < total_pages %}
+    <a href="{{ url_for('admin_utilisateurs', page=page+1) }}">Suivant →</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

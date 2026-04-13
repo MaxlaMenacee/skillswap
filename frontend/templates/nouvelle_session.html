@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Proposer une session — SkillSwap{% endblock %}
+
+{% block content %}
+<h1>Proposer une session à {{ partenaire.prenom }} {{ partenaire.nom }}</h1>
+<form method="POST" style="max-width:480px;">
+    <div class="form-group">
+        <label for="competence_id">Compétence à échanger</label>
+        <select id="competence_id" name="competence_id" required>
+            <option value="">— Choisir —</option>
+            {% for c in competences %}
+            <option value="{{ c.id }}">{{ c.libelle }}</option>
+            {% endfor %}
+        </select>
+        {% if not competences %}
+        <small class="text-muted">Ce profil n'a pas encore renseigné de compétences offertes.</small>
+        {% endif %}
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="date_souhaitee">Date souhaitée</label>
+            <input type="date" id="date_souhaitee" name="date_souhaitee" required>
+        </div>
+        <div class="form-group">
+            <label for="duree_estimee">Durée (min)</label>
+            <input type="number" id="duree_estimee" name="duree_estimee" value="60" min="15" max="240" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="notes">Notes (optionnel)</label>
+        <textarea id="notes" name="notes" rows="3" placeholder="Lieu de rencontre, objectifs…"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Proposer la session</button>
+    <a href="{{ url_for('voir_profil', user_id=partenaire.id) }}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Parcourir — SkillSwap{% endblock %}
+
+{% block content %}
+<h1>Parcourir les profils</h1>
+
+<form method="GET" action="{{ url_for('parcourir') }}" style="margin-bottom:1rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:end;">
+    <div class="form-group" style="margin-bottom:0;flex:1;min-width:200px;">
+        <label for="competence">Filtrer par compétence</label>
+        <select id="competence" name="competence">
+            <option value="">Toutes les compétences</option>
+            {% for c in competences %}
+            <option value="{{ c.libelle }}" {% if filtre == c.libelle %}selected{% endif %}>{{ c.libelle }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filtrer</button>
+    {% if filtre %}
+    <a href="{{ url_for('parcourir') }}" class="btn btn-secondary">Réinitialiser</a>
+    {% endif %}
+</form>
+
+{% if utilisateurs %}
+<div class="cards-grid">
+    {% for u in utilisateurs %}
+    <article class="card">
+        <h3>{{ u.prenom }} {{ u.nom[0] }}.</h3>
+        {% if u.offertes %}
+            <p><strong>Offre :</strong> {% for o in u.offertes %}<span class="tag tag-green">{{ o }}</span>{% endfor %}</p>
+        {% endif %}
+        {% if u.cherchees %}
+            <p><strong>Cherche :</strong> {% for c in u.cherchees %}<span class="tag tag-blue">{{ c }}</span>{% endfor %}</p>
+        {% endif %}
+        <div class="mt-1">
+            <a href="{{ url_for('voir_profil', user_id=u.id) }}" class="btn btn-secondary btn-sm">Profil</a>
+            {% if current_user %}
+            <a href="{{ url_for('nouvelle_session', partenaire_id=u.id) }}" class="btn btn-primary btn-sm">Proposer une session</a>
+            {% endif %}
+        </div>
+    </article>
+    {% endfor %}
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+    {% if page > 1 %}
+    <a href="{{ url_for('parcourir', page=page-1, competence=filtre) }}">← Précédent</a>
+    {% endif %}
+    {% for p in range(1, total_pages+1) %}
+        {% if p == page %}
+        <span class="active">{{ p }}</span>
+        {% else %}
+        <a href="{{ url_for('parcourir', page=p, competence=filtre) }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page < total_pages %}
+    <a href="{{ url_for('parcourir', page=page+1, competence=filtre) }}">Suivant →</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<p class="text-muted">Aucun profil trouvé{% if filtre %} pour « {{ filtre }} »{% endif %}.</p>
+{% endif %}
+{% endblock %}

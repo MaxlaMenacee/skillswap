@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SkillSwap — Échangez vos compétences entre étudiants, gratuitement.">
+    <title>{% block title %}SkillSwap{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <a href="#main" class="skip-link">Aller au contenu</a>
+
+    <header>
+        <nav aria-label="Navigation principale">
+            <a href="{{ url_for('index') }}" class="logo">SkillSwap</a>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}">Accueil</a>
+                <a href="{{ url_for('parcourir') }}">Parcourir</a>
+                {% if current_user %}
+                    <a href="{{ url_for('dashboard') }}">Tableau de bord</a>
+                    {% if current_user.role == 'administrateur' %}
+                        <a href="{{ url_for('admin_utilisateurs') }}">Admin</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}">Déconnexion</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Se connecter</a>
+                    <a href="{{ url_for('inscription') }}" class="btn btn-primary">Créer un compte</a>
+                {% endif %}
+            </div>
+            <button class="menu-toggle" aria-label="Menu" aria-expanded="false" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded')==='false');document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+        </nav>
+    </header>
+
+    <main id="main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" role="alert">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>SkillSwap — Projet éco-conçu | <span class="green-badge">Page &lt; 200 Ko • Zéro tracker • Polices système</span></p>
+        <nav aria-label="Liens du pied de page">
+            <a href="{{ url_for('index') }}">Accueil</a> |
+            <a href="{{ url_for('parcourir') }}">Parcourir</a>
+        </nav>
+    </footer>
+</body>
+</html>

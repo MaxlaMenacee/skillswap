@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Mes compétences — SkillSwap{% endblock %}
+
+{% block content %}
+<h1>Gérer mes compétences</h1>
+<form method="POST" style="max-width:600px;">
+    <p class="section-title">Compétences que j'offre</p>
+    <div class="checkbox-grid mb-1">
+        {% for c in competences %}
+        <label>
+            <input type="checkbox" name="offertes" value="{{ c.id }}" {% if c.id in offertes_ids %}checked{% endif %}>
+            {{ c.libelle }}
+        </label>
+        {% endfor %}
+    </div>
+
+    <p class="section-title">Compétences que je cherche</p>
+    <div class="checkbox-grid mb-1">
+        {% for c in competences %}
+        <label>
+            <input type="checkbox" name="cherchees" value="{{ c.id }}" {% if c.id in cherchees_ids %}checked{% endif %}>
+            {{ c.libelle }}
+        </label>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Modifier la session — SkillSwap{% endblock %}
+
+{% block content %}
+<h1>Modifier la session #{{ se.id }}</h1>
+<p>Compétence : <strong>{{ se.competence_libelle }}</strong></p>
+
+<form method="POST" style="max-width:480px;">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="date_souhaitee">Date souhaitée</label>
+            <input type="date" id="date_souhaitee" name="date_souhaitee" value="{{ se.date_souhaitee }}" required>
+        </div>
+        <div class="form-group">
+            <label for="duree_estimee">Durée (min)</label>
+            <input type="number" id="duree_estimee" name="duree_estimee" value="{{ se.duree_estimee }}" min="15" max="240" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="statut">Statut</label>
+        <select id="statut" name="statut" required>
+            {% for s in ['proposé', 'confirmé', 'terminé', 'annulé'] %}
+            <option value="{{ s }}" {% if se.statut == s %}selected{% endif %}>{{ s|capitalize }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" rows="3">{{ se.notes or '' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Annuler</a>
+</form>
+
+<p class="section-title mt-1">Supprimer cette session</p>
+<form method="POST" action="{{ url_for('supprimer_session', session_id=se.id) }}" style="max-width:400px;">
+    <div class="form-group">
+        <label for="confirmation">Tapez <strong>SUPPRIMER</strong> pour confirmer</label>
+        <input type="text" id="confirmation" name="confirmation" placeholder="SUPPRIMER">
+    </div>
+    <button type="submit" class="btn btn-danger btn-sm">Supprimer la session</button>
+</form>
+{% endblock %}
